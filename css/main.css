@@ -11,7 +11,7 @@ body {
 }
 
 
-* UTILITIES */
+/* UTILITIES */
 .container {
     padding: 10px;
     max-width: 90%;
@@ -79,3 +79,36 @@ body {
 .white-color {
     color: #fff
 }
+
+
+/* HEADER */
+header .container {
+    justify-content: space-between;
+}
+
+    header > * {
+        flex-basis: calc(100% / 3)
+    }
+
+    .right-header {
+        order: 1;
+    }
+
+
+/* canvas-wrapper */
+#canvas-wrapper {
+    border: 2px solid blue;
+}
+
+    .canvas {
+        display: flex;
+        flex-wrap: wrap;
+        width: 800px;
+        height: 400px;
+    }
+
+        .cell {
+            width: 10px;
+            height: 10px;
+            border: 1px solid #fff;
+        }

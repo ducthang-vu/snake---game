@@ -7,11 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
 </head>
-<body>
+<body class="black white-color ">
     <header class="header">
         <div class="container central flex-w">
             <div class="left-header flex-nw">
-                <h1>Sbake</h1>
+                <h1>Snake</h1>
                 <a class="link-github block" href="https://github.com/ducthang-vu" target="_blank">
                     <i class="fab fa-github"></i>
                 </a>  
@@ -33,11 +33,6 @@
                         <input id="level_3"  name="level" type="radio" value="3" />
                         <label for="level_3">Level 3</label>
                     </div>   
-            
-                    <div class="input-box-inner">
-                        <input id="level_4"  name="level" type="radio" value="4" />
-                        <label for="level_4">Level 4</label>
-                    </div>   
                 </div>
                 
                 <button id="volume-button" class="in-block">
@@ -53,6 +48,20 @@
             </div>
         </div>
     </header>
+
+
+    <main>
+        <div class="container central">
+            <section class="score-section"></section>
+
+            <section class="canvas-section text-center">
+                <div id="canvas-wrapper" class="in-block">
+
+                </div>
+            </section>
+        </div>
+    </main>
+
 
     <!-- SCRIPT -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
