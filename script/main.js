@@ -2,14 +2,46 @@ console.log('main.js is working')
 console.log($)
 
 
+class Snake {
+    constructor() {
+        this.head = [8, 5]
+        this.tail = [[8, 4], [8, 3]]
+    }
+
+    moveSnake(array, boolean) {
+        this.tail.unshift(this.head)
+        this.head = [this.head[0] + array[0], this.head[1] + array[1]]
+        if (boolean) this.tail.pop()
+    }
+
+    printCell(x, y, htmlClass) {
+        $('.cell[data-x="' + x + '"][data-y="' + y + '"]').addClass(htmlClass)
+    }   
+
+    printSnake() {
+        $('.cell').removeClass('snake-head snake-tail');
+        this.printCell(this.head[0],  this.head[1], 'snake-head')
+        
+        this.tail.forEach(cell => {
+            this.printCell(cell[0], cell[1], 'snake-tail')
+        })
+    }
+}
+
 
 class Game {
     constructor() {
-        this.snake
+        this.snake = new Snake
         this.score = 0
         this.level = 1
         this.board = 3
         this.apple = null
+        this.nextMove = [0, 1]
+    }
+
+    //build_canvas(rows, columns)
+    placeFood() {
+        
     }
 }
 

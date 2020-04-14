@@ -90,6 +90,13 @@ header .container {
         flex-basis: calc(100% / 3)
     }
 
+        .link-github {
+            margin-left: 15px;
+            background: inherit;
+            color: inherit;
+            font-size: 250%;
+        }
+
     .right-header {
         order: 1;
     }
@@ -112,3 +119,11 @@ header .container {
             height: 10px;
             border: 1px solid #fff;
         }
+
+            .snake-head {
+                background: yellow;
+            }
+
+            .snake-tail {
+                background: orange;
+            }
