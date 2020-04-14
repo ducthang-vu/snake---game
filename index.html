@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container central flex-w">
+            <div class="left-header flex-nw">
+                <h1>Sbake</h1>
+                <a class="link-github block" href="https://github.com/ducthang-vu" target="_blank">
+                    <i class="fab fa-github"></i>
+                </a>  
+            </div>
+    
+            <div class="right-header flex-nw">
+                <div class="input-box">
+                    <div class="input-box-inner">
+                        <input id="level_1" name="level" type="radio" value="1" checked/>
+                        <label for="level_1">Level 1</label>
+                    </div>
+            
+                    <div class="input-box-inner">
+                        <input id="level_2"  name="level" type="radio" value="2" />
+                        <label for="level_2">Level 2</label>
+                    </div>  
+            
+                    <div class="input-box-inner">
+                        <input id="level_3"  name="level" type="radio" value="3" />
+                        <label for="level_3">Level 3</label>
+                    </div>   
+            
+                    <div class="input-box-inner">
+                        <input id="level_4"  name="level" type="radio" value="4" />
+                        <label for="level_4">Level 4</label>
+                    </div>   
+                </div>
+                
+                <button id="volume-button" class="in-block">
+                    <i id="icon-volume" class="fas fa-volume-up"></i>
+                    <i id="icon-switch" class="fas fa-toggle-on darkgreen-color"></i>
+                </button>
+            </div>
+                
+            <div class="center-header text-center">
+                <button id="play-button" class="play-button button block green white-color">
+                    Play
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- SCRIPT -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/89ef06fff6.js" crossorigin="anonymous"></script>
+    <script src="script/main.js"></script>
+</body>
+</html>
