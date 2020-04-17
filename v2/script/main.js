@@ -14,134 +14,163 @@ function ranCoord(a, b) {
 }
 
 
+function sumCoord(array1, array2) {
+    return [array1[0] + array2[0], array1[1] + array2[1]]
+}
+
+
 /* CLASSES */
 class Snake {
-    constructor(board) {
-        this.head = [8, 5]
-        this.tail = [[8, 4], [8, 3]]
-        this.nextMove = [0, 1]
-        this.board = board
+    constructor(array) {
+        this.head = array[0]  
+        this.tail = array.slice(1)
+        this.nextMove = [0, 10] // Should be random?
+        this.tail_deleted
     }
-
-    isInclude(array){
-        if (isEqualArray2(array, this.head)) return true
-        for (let i = 0; i < this.tail.length; i++) {
-            if (isEqualArray2(array, this.tail[i])) return true
-        }
-        return false
-    }
-
-    set_NextMove(array) {
-        var next_head = [(this.head[0] + array[0]) % this.board[1], (this.head[1] + array[1]) % this.board[0]]
-        if (isEqualArray2(next_head, this.tail[0])) return -1   //Ivalid move, not executed
-        if (this.isInclude(next_head)) return 0     //Losing move
-        this.nextMove = array
-        return 1
-    }
-
-    moveSnake(boolean=true) {
-        this.tail.unshift(this.head)
-        this.head = [(this.head[0] + this.nextMove[0]) % this.board[1], (this.head[1] + this.nextMove[1]) % this.board[0]]
-        if (boolean) this.tail.pop()
-    }
-
-    printCell(x, y, htmlClass) {
-        $('.cell[data-x="' + x + '"][data-y="' + y + '"]').addClass(htmlClass)
-    }   
 
     printSnake() {
-        $('.cell').removeClass('snake-head snake-tail');
-        this.printCell(this.head[0],  this.head[1], 'snake-head')
-        
-        this.tail.forEach(cell => {
-            this.printCell(cell[0], cell[1], 'snake-tail')
-        })
-    }   
+        c.fillStyle = '#8b0000'
+        c.fillRect(this.head[0], this.head[1], Game.cellSize(), Game.cellSize())
+        for (let coord of this.tail) {
+            c.fillStyle = '#ffff00'
+            c.fillRect(coord[0], coord[1], Game.cellSize(), Game.cellSize())
+        } 
+    }
+
+    setNextMove(array) {
+        //Head cannot move backwards
+        if (isEqualArray2(sumCoord(this.head, array), this.tail[0])) {
+            return false
+        } 
+        else {
+            this.nextMove = array
+            return true
+        }
+    }
+
+    moveSnake(foodGrowth=false) {
+        var nextHead = sumCoord(this.head, this.nextMove)
+
+        if (nextHead[0] >= 800) nextHead[0] = 0
+        if (nextHead[0] < 0) nextHead[0] = Game.maxBoard()[0] - this.size
+        if (nextHead[1] >= 400) nextHead[1] = 0
+        if (nextHead[1] < 0) nextHead[1] = Game.maxBoard()[1] - this.size
+
+        if (this.tail.some(x => isEqualArray2(x, nextHead))) {return false} //Game over!
+        else {
+            this.tail.unshift(this.head)
+            this.head = nextHead
+        }
+
+        if (!foodGrowth) this.tail_deleted = this.tail.pop()
+
+        return true
+    }
+}
+
+
+class Food {
+    constructor(array) {
+        this.currentFood = [array]
+        this.timerId = []
+    }
+
+    printFood() {
+        c.fillStyle = '#fff'
+        c.fillRect(currentFood[0], currentFood[1], Game.cellSize(), Game.cellSize())
+    }
 }
 
 
 class Game {
-    static boardSize() {return {'big': [40, 80]}}
+    static maxBoard() {return [800, 400]}
+    static cellSize() {return 10}
 
     constructor() {
         self = this
-        this.board = Game.boardSize()['big']
-        this.snake = new Snake(this.board)
-        this.score = 0
-        this.level = 1
+        this.snake = new Snake([[30, 10], [20, 10], [10, 10]])
         this.food = null
-        this.cycleId
-    }
-
-    build_canvas(rows, columns) {
-        // Buils the canvas for the game, by creating a <div> of class "canvas", and inside it (rows * columns) cells.
-        // Each cell has special attributes "data-x" and "data-y" (column and row), being (rows - 1, 0) the first cell and (0, columns -1) the last.
-        var content = '<div class="canvas">'
-        for (let y = rows - 1; y >= 0; y--) {
-            for (let x = 0; x < columns; x++)
-                content += '<div class="cell" data-x="' + x + '" data-y="' + y + '"></div>'
-        }
-        board.html(content + '</div>')
-    }
-
-    addFood(a, b) {
-        do {var food = ranCoord(a, b)} while (this.snake.isInclude(array))
-        this.food = food   
+        this.score = 0
+        this.timerId
     }
 
     enabling_Keyboard() {
         function keyboard(e) {
             switch (e.key) {
-                case 'w':
-                    self.snake.set_NextMove([0, 1])
+                case 'w' || 'ArrowUp':
+                    self.snake.setNextMove([0, -10])
                     break
-                case 'd':
-                    self.snake.set_NextMove([1, 0])
+                case 'd' || 'ArrowRight':
+                    self.snake.setNextMove([10, 0])
                     break
-                case 'a':
-                    self.snake.set_NextMove([-1 , 0])
+                case 'a' || 'ArrowLeft':
+                    self.snake.setNextMove([-10, 0])
                     break
-                case 's':
-                    self.snake.set_NextMove([0, -1])
+                case 's' || 'ArrowDown':
+                    self.snake.setNextMove([0, 10])
                     break
             }
         }
 
-        $(window).keypress(keyboard)
+        $(document).keydown(keyboard)
     }
+
+    addFood() {
+        do {
+            var nextFood = [Math.random() * Game.maxBoard()[0] | 0, Math.random() * Game.maxBoard()[1] | 0]
+        }  while (self.snake.tail.some(x => isEqualArray2(x, nextFood)))
+        self.food = new Food(nextFood)
+    }
+
 
     cycle() {
-        self.snake.moveSnake()
-        self.snake.printSnake()
+        if (self.snake.moveSnake()) {
+            c.clearRect(self.snake.tail_deleted[0], self.snake.tail_deleted[1], 10, 10)
+            self.snake.printSnake()
+        } else {
+            alert('Game over!')
+        }
+
+        if (!this.food) {
+            setTimeout(self.addFood, 2000)
+        }
     }
 
-    startGame() {
-        this.build_canvas(this.board[0], this.board[1])
+    startCycles() {
+        this.timerId = setInterval(self.cycle, 500)
+    }
+
+    stopCycles() {
+        clearInterval(this.timerId)
+    }
+
+    start() {
+        this.snake.printSnake()
         this.enabling_Keyboard()
-        this.cycleId = setInterval(this.cycle, 500)
-    }
-
-    stopCicles() {
-        clearInterval(this.cycleId)
+        this.startCycles()
     }
 }
 
 
-
-
+function clearAll() {
+    try {game.stopCycles()} catch {}
+    c.clearRect(0, 0, canvas.width, canvas.height)
+}
 
 /***************************************/
 /********* --- MAIN SCRITP --- *********/
 /***************************************/
 
 /* GLOBAL VARIABLE */
-const board = $('#canvas-wrapper')
+const canvas = document.getElementById('canvas')
+const c = canvas.getContext('2d')
 const play_btn = $('#play-button')
 
 
 play_btn.click(()=> {
+        clearAll()
         game = new Game
-        game.startGame()
+        game.start()
     }
 )
 
