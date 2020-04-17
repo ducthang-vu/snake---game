@@ -105,5 +105,6 @@ header .container {
 /* canvas-wrapper */
 #canvas {
     border: 2px solid blue;
+    cursor: not-allowed;
 }
 

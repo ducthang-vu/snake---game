@@ -52,9 +52,9 @@ class Snake {
         var nextHead = sumCoord(this.head, this.nextMove)
 
         if (nextHead[0] >= 800) nextHead[0] = 0
-        if (nextHead[0] < 0) nextHead[0] = Game.maxBoard()[0] - this.size
+        if (nextHead[0] < 0) nextHead[0] = Game.maxBoard()[0] - Game.cellSize()
         if (nextHead[1] >= 400) nextHead[1] = 0
-        if (nextHead[1] < 0) nextHead[1] = Game.maxBoard()[1] - this.size
+        if (nextHead[1] < 0) nextHead[1] = Game.maxBoard()[1] - Game.cellSize()
 
         if (this.tail.some(x => isEqualArray2(x, nextHead))) {return false} //Game over!
         else {
