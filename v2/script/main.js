@@ -149,27 +149,35 @@ class Game {
     cycle() {
         c.clearRect(0, 0, canvas.width, canvas.height)
 
-        if (!self.food) game.addFood()
-
         self.printFood()
-        if (self.snake.moveSnake(self.food) == -1) self.endgame()   
-        else if (self.snake.moveSnake(self.food) == 1) {
 
-        }
-        self.snake.printSnake()
+        var snakeMoveResult = self.snake.moveSnake(self.food) 
+        if (snakeMoveResult== -1) self.endgame()   
+        else {
+            self.snake.printSnake()
+            if (snakeMoveResult == 1) {
+                self.score++
+                self.stopCycles() 
+                self.startCycles(this.timerId)
+            }
+        } 
+
+        score_display.html(self.score)
     }
 
     startCycles() {
+        self.addFood()
         this.timerId = setInterval(self.cycle, Game.speed_per_score[self.score])
     }
 
     stopCycles() {
-        clearInterval(this.timerId)
-        mes_display.html('GAME OVER!')
+        self.food = 0
+        clearInterval(self.timerId)
     }
 
     endgame() {
         self.stopCycles() 
+        mes_display.html('GAME OVER!')
     }
 
     start() {
@@ -194,6 +202,7 @@ function clearAll() {
 const canvas = document.getElementById('canvas')
 const c = canvas.getContext('2d')
 const play_btn = $('#play-button')
+const score_display = $('#score-display')
 const mes_display = $('#messages')
 
 
