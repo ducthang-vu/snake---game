@@ -103,27 +103,10 @@ header .container {
 
 
 /* canvas-wrapper */
-#canvas-wrapper {
+#canvas {
     border: 2px solid blue;
+    cursor: not-allowed;
+    width: 400px;
+    height: 400px;
 }
 
-    .canvas {
-        display: flex;
-        flex-wrap: wrap;
-        width: 800px;
-        height: 400px;
-    }
-
-        .cell {
-            width: 10px;
-            height: 10px;
-            border: 1px solid #ccc;
-        }
-
-            .snake-head {
-                background: yellow;
-            }
-
-            .snake-tail {
-                background: orange;
-            }
