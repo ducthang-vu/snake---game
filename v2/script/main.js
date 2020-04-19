@@ -79,9 +79,10 @@ class Snake {
         this.tail.unshift(this.head)
         this.head = this.head.go(this.nextMove)
 
-        if (food == 0 || food == 1 || !this.head.isEqual(food)) {
-            console.log('here')
-            this.tail.pop()}
+        if (food == 0 || food == 1 || !this.head.isEqual(food)) {   
+            this.tail.pop()
+            return 0    
+        } else return 1     
     }
 
     printSnake() {
@@ -96,7 +97,7 @@ class Snake {
 
 
 class Game {
-    static speed_per_score() {return [500, 450, 400, 350, 300, 250, 200, 150, 100, 50, 25]}
+    static speed_per_score = [500, 450, 400, 350, 300, 250, 200, 150, 100, 50, 25]
 
     constructor() {
         self = this
@@ -151,16 +152,24 @@ class Game {
         if (!self.food) game.addFood()
 
         self.printFood()
-        if (self.snake.moveSnake(self.food) == -1) self.stopCycles()    //player loses
+        if (self.snake.moveSnake(self.food) == -1) self.endgame()   
+        else if (self.snake.moveSnake(self.food) == 1) {
+
+        }
         self.snake.printSnake()
     }
 
     startCycles() {
-        this.timerId = setInterval(self.cycle, 500)
+        this.timerId = setInterval(self.cycle, Game.speed_per_score[self.score])
     }
 
     stopCycles() {
         clearInterval(this.timerId)
+        mes_display.html('GAME OVER!')
+    }
+
+    endgame() {
+        self.stopCycles() 
     }
 
     start() {
@@ -185,6 +194,7 @@ function clearAll() {
 const canvas = document.getElementById('canvas')
 const c = canvas.getContext('2d')
 const play_btn = $('#play-button')
+const mes_display = $('#messages')
 
 
 play_btn.click(()=> {
