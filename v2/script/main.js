@@ -14,6 +14,10 @@ function ranCoord(a, b) {
 
 class Coord {
     static maxBoard = [80, 40]
+
+    static createRandom() {return new Coord(Math.random() * Coord.maxBoard[0] | 0, Math.random() * Coord.maxBoard[1] | 0)}
+
+
     // A class for basic modelling of 2D vectors with basic methods for Snake game
     constructor(x, y) {
         if (x >= Coord.maxBoard[0]) this.x = x - Coord.maxBoard[0]
@@ -54,13 +58,13 @@ class Snake {
     constructor(head) {
         this.head = head
         this.tail = [new Coord (this.head.x, this.head.y + 1), new Coord (this.head.x, this.head.y + 2)]
-        this._nextMove = 'up'
+        this.nextMove = 'up'
     }
 
-    set nextMove(new_move) {
+    set_nextMove(new_move) {
         if (this.head.go(new_move).isEqual(this.tail[0])) return false  //move illegal
         else {
-            this._nextMove = new_move
+            this.nextMove = new_move
             return true
         }
     }
@@ -69,12 +73,15 @@ class Snake {
         return this.tail.concat(this.head).some(x => x.isEqual(coord))
     }
 
-    moveSnake(food=null) {
-        if (this.isIncluded(this.head.go(this._nextMove))) return -1   //player loses
+    moveSnake(food=0) {
+        if (this.isIncluded(this.head.go(this.nextMove))) return -1  //player loses
 
-        this.tail.push(this.head)
-        this.head = this.head.go(this._nextMove)
-        if (!food) this.tail.pop()
+        this.tail.unshift(this.head)
+        this.head = this.head.go(this.nextMove)
+
+        if (food == 0 || food == 1 || !this.head.isEqual(food)) {
+            console.log('here')
+            this.tail.pop()}
     }
 
     printSnake() {
@@ -93,10 +100,59 @@ class Game {
 
     constructor() {
         self = this
-        this.snake = new Snake(new Coord(Math.random() * Coord.maxBoard[0] | 0, Math.random() * Coord.maxBoard[1] | 0))
-        this.food = false
+        this.snake = new Snake(Coord.createRandom())
+        this.food = 0   //0: no food, 1: waiting to respawn, Coord(x,y): active at the coordinates
         this.score = 0
         this.timerId
+    }
+
+    enabling_Keyboard() {
+        function keyboard(e) {
+            switch (e.key) {
+                case 'w':
+                    self.snake.set_nextMove('up')
+                    break
+                case 'd':
+                    self.snake.set_nextMove('right')
+                    break
+                case 'a':
+                    self.snake.set_nextMove('left')
+                    break 
+                case 's':
+                    self.snake.set_nextMove('down')
+                    break
+            }
+        }
+
+        $(document).keydown(keyboard)
+    }
+
+    addFood() {
+        function createFood() {
+            do {
+                var nextFood = Coord.createRandom()
+            }  while (self.snake.isIncluded(nextFood)) 
+        
+            self.food = self.food = nextFood
+        }
+        
+        self.food = 1
+        setTimeout(createFood, 1000)
+    }
+
+    printFood() {
+        c.fillStyle = ' #00FF00'    //green
+        c.fillRect(this.food.x, this.food.y, 1, 1)
+    }
+
+    cycle() {
+        c.clearRect(0, 0, canvas.width, canvas.height)
+
+        if (!self.food) game.addFood()
+
+        self.printFood()
+        if (self.snake.moveSnake(self.food) == -1) self.stopCycles()    //player loses
+        self.snake.printSnake()
     }
 
     startCycles() {
@@ -105,33 +161,6 @@ class Game {
 
     stopCycles() {
         clearInterval(this.timerId)
-    }
-
-    enabling_Keyboard() {
-        function keyboard(e) {
-            switch (e.key) {
-                case 'w':
-                    self.snake.nextMove = 'up'
-                    break
-                case 'd':
-                    self.snake.nextMove = 'right'
-                    break
-                case 'a':
-                    self.snake.nextMove = 'left'
-                    break 
-                case 's':
-                    self.snake.nextMove = 'down'
-                    break
-            }
-        }
-
-        $(document).keydown(keyboard)
-    }
-
-    cycle() {
-        c.clearRect(0, 0, canvas.width, canvas.height)
-        self.snake.moveSnake()
-        self.snake.printSnake()
     }
 
     start() {
@@ -161,6 +190,6 @@ const play_btn = $('#play-button')
 play_btn.click(()=> {
         clearAll()
         game = new Game
-        //game.start()
+        game.start()
     }
 )
