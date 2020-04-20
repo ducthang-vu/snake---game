@@ -21,18 +21,13 @@
                 <div class="input-box">
                     <div class="input-box-inner">
                         <input id="level_1" name="level" type="radio" value="1" checked/>
-                        <label for="level_1">Level 1</label>
+                        <label for="level_1">Normal</label>
                     </div>
             
                     <div class="input-box-inner">
                         <input id="level_2"  name="level" type="radio" value="2" />
-                        <label for="level_2">Level 2</label>
+                        <label for="level_2">Relax</label>
                     </div>  
-            
-                    <div class="input-box-inner">
-                        <input id="level_3"  name="level" type="radio" value="3" />
-                        <label for="level_3">Level 3</label>
-                    </div>   
                 </div>
                 
                 <button id="volume-button" class="in-block">
@@ -53,8 +48,12 @@
     <main>
         <div class="container central">
             <section class="score-section">
-                <span id="score-display"></span>
-                <span id="messages"></span>
+                <div class="wrapper text-center">
+                    <div class="wr-label">Score:</div>
+                    <div class="box inline-fl-w">
+                        <span id="score-display">0</span>
+                    </div>
+                </div>
             </section>
 
             <section class="canvas-section text-center">
@@ -65,7 +64,34 @@
         </div>
     </main>
 
-
+    <footer>
+        <div class="container relative central">
+            <div class="main-footer flex-nw">
+                <button id="info-button" class="info-button">
+                    <i class="far fa-question-circle"></i>
+                </button>
+    
+                <div class="footer-right text-right">
+                    <p>Made by Thang<br>20/04/2020</p>
+                </div>  
+            </div> 
+        
+            <div id="rules" class="rules absolute display-none text-left ">
+                <p>
+                    <h3>Rules of Snake</h3>
+                    The player controls a snake with red head and yellow tail.<br> The snake wants to eat the green apples the spawn on the board from time to time.<br> Each apple earns you a full point!
+                    
+                    The snake eats by running into the apples with its head; but if it runs into its own body it's GAME OVER!
+                </p>
+    
+                <p>
+                    <h3>Game option</h3>
+                    Normal: after eating an apple, the speed of snake increase!<br>
+                    Relax: the speed of the game is constant. 
+                </p>
+            </div>
+        </div>
+    </footer>
     <!-- SCRIPT -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/89ef06fff6.js" crossorigin="anonymous"></script>

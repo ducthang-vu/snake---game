@@ -91,7 +91,7 @@ class Snake {
 
 
 class Game {
-    static speed_per_score(score) {return 60 - score * 0.75}
+    static speed_per_score(score) {return 60 - Math.max((score * 0.75), 10)}
 
     constructor() {
         self = this
@@ -119,6 +119,7 @@ class Game {
             }
         }
 
+        
         $(document).keydown(keyboard)
     }
 
@@ -141,14 +142,13 @@ class Game {
     }
 
     cycle() {
-        c.clearRect(0, 0, canvas.width, canvas.height)
-
-        self.printFood()
-
         var snakeMoveResult = self.snake.moveSnake(self.food) 
-        if (snakeMoveResult== -1) self.endgame()   
+        if (snakeMoveResult == -1) self.endgame()   // player loses
         else {
+            c.clearRect(0, 0, canvas.width, canvas.height)
             self.snake.printSnake()
+            self.printFood()
+
             if (snakeMoveResult == 1) {
                 self.score++
                 self.stopCycles() 
@@ -188,6 +188,20 @@ function clearAll() {
 }
 
 
+function showInfo() {
+    rules_box.toggle()
+    info_button.toggleClass('darkred-color')
+    info_button.children().toggleClass('fa-question-circle fa-window-close')
+} 
+
+
+function switchVolume() {
+    activeAudio = !activeAudio
+    icon_volume.toggleClass('fa-volume-up fa-volume-mute')
+    icon_switch.toggleClass('fa-toggle-on fa-toggle-off')
+    icon_switch.toggleClass('darkgreen-color darkred-color')
+}
+
 
 /***************************************/
 /********* --- MAIN SCRITP --- *********/
@@ -196,10 +210,20 @@ function clearAll() {
 /* GLOBAL VARIABLE */
 const canvas = document.getElementById('canvas')
 const c = canvas.getContext('2d')
+const icon_switch = $('#icon-switch')
+const icon_volume = $('#icon-volume')
+const info_button = $('#info-button')
 const play_btn = $('#play-button')
 const score_display = $('#score-display')
 const mes_display = $('#messages')
+const rules_box = $('#rules')
+const volume_button = $('#volume-button')
 
+var activeAudio = true
+
+
+volume_button.click(switchVolume)
+info_button.click(showInfo)
 
 play_btn.click(()=> {
         clearAll()
