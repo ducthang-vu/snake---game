@@ -2,17 +2,16 @@ console.log('main.js is working')
 console.log($)
 
 
-/*********/
-/* CLASSES
-/*********/
+/*************************************************/
+/********* --- CLASSES and FUNCTIONS --- *********/
+/*************************************************/
 
 class Coord {
     static maxBoard = [40, 40]
 
     static createRandom() {return new Coord(Math.random() * Coord.maxBoard[0] | 0, Math.random() * Coord.maxBoard[1] | 0)}
 
-
-    // A class for basic modelling of 2D vectors with basic methods for Snake game
+    // A class for essential  modelling of 2D vectors with basic methods for Snake game
     constructor(x, y) {
         if (x >= Coord.maxBoard[0]) this.x = x - Coord.maxBoard[0]
         else if (x < 0) this.x =  x + Coord.maxBoard[0]
@@ -27,19 +26,19 @@ class Coord {
         return other instanceof Coord ? this.x == other.x && this.y == other.y : -1 
     }
 
-    go(direction) {
+    go(direction, n=1) {
         switch (direction) {
             case 'up': 
-                return new Coord(this.x, this.y - 1)
+                return new Coord(this.x, this.y - n)
 
             case 'down': 
-                return new Coord(this.x, this.y + 1)
+                return new Coord(this.x, this.y + n)
 
             case 'right': 
-                return new Coord(this.x + 1, this.y)
+                return new Coord(this.x + n, this.y)
 
             case 'left': 
-                return new Coord(this.x - 1, this.y)
+                return new Coord(this.x - n, this.y)
 
             default: 
                 throw 'parameter "' + direction + '" is not "up", "down", "right" or "left".'
@@ -51,7 +50,7 @@ class Coord {
 class Snake {
     constructor(head) {
         this.head = head
-        this.tail = [this.head.go('down'), this.head.go('down').go('down'), this.head.go('down').go('down').go('down')]
+        this.tail = [this.head.go('down'), this.head.go('down', 2), this.head.go('down', 3), this.head.go('down', 4)]
         this.nextMove = 'up'
     }
 
@@ -91,10 +90,12 @@ class Snake {
 
 
 class Game {
-    static speed_per_score(score) {return 60 - Math.max((score * 0.75), 10)}
+    static speed_per_score(score) {return Math.max(60 - (score * 0.75), 10)}
+    static speed_relax = 60
 
     constructor() {
         self = this
+        this.level = level_inputs.filter(':checked').attr('value')
         this.snake = new Snake(Coord.createRandom())
         this.food = 0   //0: no food, 1: waiting to respawn, Coord(x,y): active at the coordinates
         this.score = 0
@@ -161,7 +162,10 @@ class Game {
 
     startCycles() {
         self.addFood()
-        this.timerId = setInterval(self.cycle, Game.speed_per_score(self.score))
+
+        this.timerId = setInterval(self.cycle, (() => {
+            return this.level? Game.speed_per_score(self.score) : Game.speed_relax
+        })())
     }
 
     stopCycles() {
@@ -213,6 +217,7 @@ const c = canvas.getContext('2d')
 const icon_switch = $('#icon-switch')
 const icon_volume = $('#icon-volume')
 const info_button = $('#info-button')
+const level_inputs = $('input[name="level"]')
 const play_btn = $('#play-button')
 const score_display = $('#score-display')
 const mes_display = $('#messages')
