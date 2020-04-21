@@ -2,6 +2,27 @@ console.log('main.js is working')
 console.log($)
 
 
+/********************************************/
+/********* --- GLOBAL VARIABLES --- *********/
+/********************************************/
+const audio_bleep =  document.getElementById('audio-bleep')
+const audio_defeat = document.getElementById('audio-defeat')
+const audio_success = document.getElementById('audio-success')
+
+const canvas = document.getElementById('canvas')
+const c = canvas.getContext('2d')
+
+const icon_switch = $('#icon-switch')
+const icon_volume = $('#icon-volume')
+const info_button = $('#info-button')
+const level_inputs = $('input[name="level"]')
+const play_btn = $('#play-button')
+const score_display = $('#score-display')
+const mes_display = $('#messages')
+const rules_box = $('#rules')
+const volume_button = $('#volume-button')
+
+
 /*************************************************/
 /********* --- CLASSES and FUNCTIONS --- *********/
 /*************************************************/
@@ -170,15 +191,18 @@ class Game {
 
     stopCycles() {
         self.food = 0
+        audio_success.play()
         clearInterval(self.timerId)
     }
 
     endgame() {
         self.stopCycles() 
+        audio_defeat.play()
         mes_display.html('GAME OVER!')
     }
 
     start() {
+        audio_bleep.play()
         this.startCycles()
         this.enabling_Keyboard()
     }
@@ -210,20 +234,6 @@ function switchVolume() {
 /***************************************/
 /********* --- MAIN SCRITP --- *********/
 /***************************************/
-
-/* GLOBAL VARIABLE */
-const canvas = document.getElementById('canvas')
-const c = canvas.getContext('2d')
-const icon_switch = $('#icon-switch')
-const icon_volume = $('#icon-volume')
-const info_button = $('#info-button')
-const level_inputs = $('input[name="level"]')
-const play_btn = $('#play-button')
-const score_display = $('#score-display')
-const mes_display = $('#messages')
-const rules_box = $('#rules')
-const volume_button = $('#volume-button')
-
 var activeAudio = true
 
 
