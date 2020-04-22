@@ -168,6 +168,7 @@ class Game {
                 } 
         }
 
+
         canvas.addEventListener('click', mouseMoving)
     }
 
