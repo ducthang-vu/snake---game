@@ -122,7 +122,7 @@ class Game {
     }
 
     enabling_Keyboard() {
-        function keyboard(e) {
+        function keyMoving(e) {
             switch (e.key) {
                 case 'w':
                     self.snake.set_nextMove('up')
@@ -140,11 +140,11 @@ class Game {
         }
 
         
-        $(document).keydown(keyboard)
+        $(document).keydown(keyMoving)
     }
 
     enabling_mouse() {
-        canvas.addEventListener('click', function(e) {
+        function mouseMoving(e) {
             var canvasRect = canvas.getBoundingClientRect()
             var ratio = [canvasRect.width/canvas.width, canvasRect.height/canvas.height]
 
@@ -153,22 +153,22 @@ class Game {
             
             var clickCoord = new Coord(x/ratio[0], y/ratio[1])
 
-            console.log(self.snake.head.x == self.snake.tail[1].x)
             //checking whether the snake is moving horizontally...
             if (self.snake.head.y == self.snake.tail[0].y) {
                 if (clickCoord.y < self.snake.tail[0].y) {
                     self.snake.set_nextMove('up')
                 } else if (clickCoord.y > self.snake.tail[0].y + 1) {
                     self.snake.set_nextMove('down')
-                }
+                    }
             } // or vertically
             else if (clickCoord.x < self.snake.tail[0].x) {
                     self.snake.set_nextMove('left')
                 } else if (clickCoord.x > self.snake.tail[0].x + 1) {
                     self.snake.set_nextMove('right')
-                }
-            } 
-        )
+                } 
+        }
+
+        canvas.addEventListener('click', mouseMoving)
     }
 
     addFood() {
