@@ -28,18 +28,16 @@ const volume_button = $('#volume-button')
 /*************************************************/
 
 class Coord {
-    static maxBoard = [40, 40]
-
-    static createRandom() {return new Coord(Math.random() * Coord.maxBoard[0] | 0, Math.random() * Coord.maxBoard[1] | 0)}
+    static createRandom() {return new Coord(Math.random() * canvas.width | 0, Math.random() * canvas.height | 0)}
 
     // A class for essential  modelling of 2D vectors with basic methods for Snake game
     constructor(x, y) {
-        if (x >= Coord.maxBoard[0]) this.x = x - Coord.maxBoard[0]
-        else if (x < 0) this.x =  x + Coord.maxBoard[0]
+        if (x >= canvas.width) this.x = x - canvas.width
+        else if (x < 0) this.x =  x + canvas.width 
         else this.x = x
 
-        if (y >= Coord.maxBoard[1]) this.y = y - Coord.maxBoard[1]
-        else if (y < 0) this.y = y + Coord.maxBoard[1] 
+        if (y >= canvas.height) this.y = y - canvas.height
+        else if (y < 0) this.y = y + canvas.height 
         else this.y = y
     }
 
@@ -111,7 +109,7 @@ class Snake {
 
 
 class Game {
-    static speed_per_score(score) {return Math.max(60 - (score * 0.75), 10)}
+    static speed_per_score(score) {return Math.max(60 - (score * 0.50), 10)}
     static speed_relax = 60
 
     constructor() {
@@ -143,6 +141,34 @@ class Game {
 
         
         $(document).keydown(keyboard)
+    }
+
+    enabling_mouse() {
+        canvas.addEventListener('click', function(e) {
+            var canvasRect = canvas.getBoundingClientRect()
+            var ratio = [canvasRect.width/canvas.width, canvasRect.height/canvas.height]
+
+            let x = e.clientX - canvasRect.left
+            let y = e.clientY - canvasRect.top
+            
+            var clickCoord = new Coord(x/ratio[0], y/ratio[1])
+
+            console.log(self.snake.head.x == self.snake.tail[1].x)
+            //checking whether the snake is moving horizontally...
+            if (self.snake.head.y == self.snake.tail[0].y) {
+                if (clickCoord.y < self.snake.tail[0].y) {
+                    self.snake.set_nextMove('up')
+                } else if (clickCoord.y > self.snake.tail[0].y + 1) {
+                    self.snake.set_nextMove('down')
+                }
+            } // or vertically
+            else if (clickCoord.x < self.snake.tail[0].x) {
+                    self.snake.set_nextMove('left')
+                } else if (clickCoord.x > self.snake.tail[0].x + 1) {
+                    self.snake.set_nextMove('right')
+                }
+            } 
+        )
     }
 
     addFood() {
@@ -205,6 +231,7 @@ class Game {
         audio_bleep.play()
         this.startCycles()
         this.enabling_Keyboard()
+        this.enabling_mouse()
     }
 }
 
