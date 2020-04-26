@@ -107,6 +107,7 @@ header {
     padding: 15px 20px 10px;
     font-size: 200%;
     font-weight: 700;
+    min-width: 320px;
 }
 
 

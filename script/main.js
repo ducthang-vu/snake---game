@@ -194,7 +194,7 @@ class Game {
             }
         } 
 
-        $('#score-display').html(self.score)
+        $('#score-display').text(self.score)
     }
 
     startInvervals() {
@@ -222,7 +222,7 @@ class Game {
     endgame() {
         self.stopCycles() 
         audio_defeat.play()
-        mes_display.html('GAME OVER!')
+        mes_display.text('GAME OVER!')
     }
 
     start() {
@@ -235,17 +235,17 @@ class Game {
 
 
 function resetAll() {
-    var currentBest = null
-
+    resetAll.currentBest = null
+    
     try {
         game.stopCycles()
-        if (game.score > currentBest) currentBest = game.score
+        if (game.score > resetAll.currentBest) resetAll.currentBest = game.score
 
     } catch {}  //  if no game is active, do nothing
 
-    if (currentBest) $('#best-display').html(currentBest)
+    if (resetAll.currentBest) $('#best-display').text(resetAll.currentBest)
 
-    $('#score-display').html(0)
+    $('#score-display').text(0)
     c.clearRect(0, 0, canvas.width, canvas.height)
 }
 
@@ -253,11 +253,11 @@ function resetAll() {
 function activatePauseBtn() {
     try {
         if (game.timerId) {
-            $('#pause-btn').html('Resume')
+            $('#pause-btn').text('Resume')
             $('#pause-btn').addClass('resume')
             game.stopInvervals()
         } else {
-            $('#pause-btn').html('Pause')
+            $('#pause-btn').text('Pause')
             $('#pause-btn').removeClass('resume')
             game.startInvervals()
         } 
