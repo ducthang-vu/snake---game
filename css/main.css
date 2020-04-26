@@ -6,14 +6,12 @@
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
-    justify-content: space-between;
+    font-family: 'Roboto Mono', monospace;
+    background: #000;
 }
 
 button {
-    padding: 10px;
-    color: inherit;
-    background: inherit;
+    text-align: center;
 }
 
 button,
@@ -21,6 +19,8 @@ button:focus,
 a,
 input,
 label {
+    color: inherit;
+    background: inherit;
     cursor: pointer;
     outline: 0;
 }
@@ -29,11 +29,15 @@ label {
 /* UTILITIES */
 .container {
     padding: 10px;
-    max-width: 90%;
-    width: 1000px;
+    width: 90%;
+    max-width: 1100px;
 }
 
-.display-none {
+.block {
+    display: block;
+}
+
+.no-display {
     display: none;
 }
 
@@ -87,141 +91,132 @@ label {
     background: #000;
 }
 
-.darkgreen-color {
-    color: darkgreen;
-}
-
-.darkred-color {
-    color: darkred;
-}
-
-.green {
-    background: darkgreen;
-}
-
 .white-color {
     color: #fff
 }
 
 
-/* HEADER */
-/* HEADER */
-.header .container {
-    justify-content: space-between;
-    align-items: center;
+/* MAIN */ 
+main {
+    background: #332840;
 }
 
-    header .left-header,
-    header .right-header {
-        flex-basis: 50%;
-    }
 
-    header .center-header {
-        flex-basis: 100%;
-    }
+/* HEADER */
+header {
+    padding: 15px 20px 10px;
+    font-size: 200%;
+    font-weight: 700;
+}
 
-        .link-github {
-            margin-left: 15px;
-            background: inherit;
-            color: inherit;
-            font-size: 250%;
-        }
 
-        .play-button {
-            font-size: 150%;
-        }
+/* PLAY-BUTTON SECTION */
+#play-btn { 
+    margin-bottom: 10px;
+    padding: 5px 15px;
+}
 
-        .right-header {
-            justify-content: flex-end;
-            align-items: center;
-        }
+/* SCORE-ROW */
+.score-row > * {
+    margin: 5px 0;
+}
 
-            #volume-button,
-            #volume-button:focus {
-                width: 50px;
-                padding: 0;
-                background: inherit;
-                color: inherit;
-                border: 0;
-                outline: 0;
-            }
+.score-row > div:first-child {
+    flex-basis: 100%;
+}
 
-                #volume-button > * {
-                    display: block;
-                }
-
-                #icon-volume {
-                    padding: 5px;
-                    font-size: 200%;
-                }
-
-                #icon-switch {
-                    font-size: 200%;
-                }
-
-            .input-box {
-                margin-right: 15px;
-            }
+.score-row > div:not(:first-child) {
+    flex-basis: 50%;
+}
 
 
 /* CANVAS */
-#canvas {
-    border: 2px solid blue;
-    /*cursor: not-allowed;*/
-    width: 300px;
-    height: 300px;
+.canvas-box {
+    border: 5px solid #5D2980;
+    border-radius: 3px;
 }
 
-
-/* SCORE */
-.wrapper {
-        margin: 15px;
+    #canvas {
+        width: 300px;
+        height: 300px;
+        cursor: none;
     }
 
-    .wr-label {
-        margin-bottom: 10px;
-        font-size: 120%;
+    .main-menu {
+        top: 0;
+        left: 0;
+        width: 300px;
+        height: 300px;
+        font-size: 90%;
+        background-color: rgba(93, 41, 128, 0.8);
     }
 
-    .box {
-        justify-content: center;
+        .main-menu.active,
+        #info-menu.active,
+        #options-menu.active {
+            display: block;
+        }
+
+        .main-menu #close-menu-btn {
+            top: 0;
+            right: 0;
+            width: 30px;
+            height: 30px;
+            border: 0;
+            color: red;
+            font-size: 160%;
+        }
+
+        .main-menu p {
+            margin: 10px 0;
+        }
+
+        #info-menu,
+        #options-menu {
+            margin-top: 15px;
+            word-wrap: break-word;
+        }
+        
+            #options-menu h5 {
+                margin-bottom: 10px;
+            }
+
+    .btn-row {
+        justify-content: space-between;
+        padding: 1px 5px;
+    }
+
+        #pause-btn {
+            width: 65px;    
+        }
+
+        #pause-btn.resume {
+            background: green;
+        }
+
+        .btn-row button {
+            margin: 0;
+            padding: 5px;
+            min-width: 30px;
+            line-height: 100%;
+        }
+
+            i.fa-volume-mute {
+                color: red;
+            }
+
+/* FOOTER */
+footer {
+    margin-top: 10px;
+}
+
+    footer .container {
+        justify-content: flex-end;
         align-items: center;
-        height: 60px;
-        width: 60px;
-        border: 1px solid #fff;
-        font-size: 200%;
-        font-weight: 800;
     }
 
-
-/* FOOTER  */
-.main-footer {
-    justify-content: space-between;
-}
-
-    .main-footer .info-button {
-        padding: 0;
-        font-size: 120%;
-        border: 0;
-    }
-
-    footer .footer-right {
-        font-style: italic;
-        font-size: 50%;
-    }
-
-footer .rules {
-    top: 0px;
-    left: 10px;
-    transform: translate(0%, -100%);
-    padding: 10px;
-    width: 800px;
-    max-width: 90%;
-    background: gray;
-    border: 1px solid #fff;
-    font-size: 90%;
-}
-
-    footer .rules > p {
-        margin-bottom: 15px;
-    }
+        footer span {
+            margin-right: 10px;
+            font-style: italic;
+            font-size: 40%;
+        }

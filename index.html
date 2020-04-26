@@ -4,93 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
 </head>
-<body class="black white-color ">
-    <header class="header">
-        <div class="container central flex-w">
-            <div class="left-header flex-nw">
-                <h1>Snake</h1>
-                <a class="link-github block" href="https://github.com/ducthang-vu" target="_blank">
-                    <i class="fab fa-github"></i>
-                </a>  
+<body class="text-center">
+    <main class="in-block central text-center white-color">
+        <header>
+            <div class="container central">
+                Snake
             </div>
-    
-            <div class="right-header flex-nw">
-                <div class="input-box">
-                    <div class="input-box-inner">
-                        <input id="level_1" name="level" type="radio" value="0" checked/>
-                        <label for="level_1">Normal</label>
-                    </div>
-            
-                    <div class="input-box-inner">
-                        <input id="level_2"  name="level" type="radio" value="1" />
-                        <label for="level_2">Relax</label>
-                    </div>  
+        </header>
+
+        <section class="play-button section">
+            <button id="play-btn">Play</button>
+        </section>
+
+        <section class="score-section">
+            <div class="container score-row flex-w central text-left">
+                <div>
+                    Mode:&nbsp;<span id="mode-display"> Normal</span>
+                </div>
+
+                <div>
+                    Score: <span id="score-display"> 0</span>
                 </div>
                 
-                <button id="volume-button" class="in-block">
-                    <i id="icon-volume" class="fas fa-volume-up"></i>
-                    <i id="icon-switch" class="fas fa-toggle-on darkgreen-color"></i>
-                </button>
-            </div>
-                
-            <div class="center-header text-center">
-                <button id="play-button" class="play-button button block green white-color">
-                    Play
-                </button>
-            </div>
-        </div>
-    </header>
-
-
-    <main>
-        <div class="container central">
-            <section class="score-section">
-                <div class="wrapper text-center">
-                    <div class="wr-label">Score:</div>
-                    <div class="box inline-fl-w">
-                        <span id="score-display">0</span>
-                    </div>
+                <div id="best-score-display">
+                    Best: <span id="best-display">none</span>
                 </div>
-            </section>
-
-            <section class="canvas-section text-center">
-                <canvas id="canvas" width="40" height="40" class="inline-block">
-                </canvas>
-            </section>
-        </div>
-    </main>
-
-    <footer>
-        <div class="container relative central">
-            <div class="main-footer flex-nw">
-                <button id="info-button" class="info-button">
-                    <i class="far fa-question-circle"></i>
-                </button>
+            </div>
+        </section>
     
-                <div class="footer-right text-right">
-                    <p>Made by Thang<br>20/04/2020</p>
-                </div>  
-            </div> 
-        
-            <div id="rules" class="rules absolute display-none text-left ">
-                <p>
-                    <h3>Rules of Snake</h3>
-                    The player controls a snake with red head and yellow tail.<br> The snake wants to eat the green apples the spawn on the board from time to time.<br> Each apple earns you a full point!
+        <section class="canvas-section in-block central text-right">
+            <div class="canvas-box in-block relative central">
+                <canvas id="canvas" width="40" height="40" class="block"></canvas>
+                <div id="main-menu" class="main-menu absolute no-display">
+                    <button id="close-menu-btn" class="absolute">
+                        <i class="far fa-window-close"></i>
+                    </button>
+
+                    <div id="info-menu" class="no-display text-left">
+                        <div class="container central">
+                            <p>
+                                The player controls a red headed snake, which roams around the board picking up green apples. By eating, the snake grow in length.
+                            </p>
+    
+                            <p>
+                                It's GAME OVER if the snake run into its own tail.
+                            </p>
+    
+                            <p>
+                                Hitting the border doesn't lose you the game: the snake will simply reappear on the other side!
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="options-menu" class="no-display text-left">
+                        <div class="container">
+                            <div>
+                                <h5>Changes will apply from the next game</h5>
+
+                                <div class="mode-box">
+                                    <h5 class="text-center">Mode</h5>
+                                    <p>In "normal" mode, snake's speed increase after eating an apple; in "relax" mode speed is constant.</p>
                     
-                    The snake eats by running into the apples with its head; but if it runs into its own body it's GAME OVER!
-                </p>
-    
-                <p>
-                    <h3>Game option</h3>
-                    Normal: after eating an apple, the speed of snake increase!<br>
-                    Relax: the speed of the game is constant. 
-                </p>
+                                    <label for="">Normal</label>
+                                    <input type="radio" name="level" value="1" checked>
+
+                                    <label for="">Relax</label>
+                                    <input type="radio" name="level" value="0">
+                                </div>
+                                <!--
+                                <div class="key-box">
+                                    <h5 class="text-center">Mode</h5>
+                                    <p>In "normal" mode, snake's speed increase after eating an apple; in "relax" mode speed is constant.</p>
+                    
+                                    <label for="">Normal</label>
+                                    <input type="radio" name="level" value="1" checked>
+
+                                    <label for="">Relax</label>
+                                    <input type="radio" name="level" value="0">
+                                </div>
+                                -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </footer>
+
+            <div class="btn-row flex">
+                <button id="pause-btn">Pause</button>
+
+                <div class="right-btns">
+                    <button id="info-btn" class="in-block">
+                        <i class="far fa-question-circle"></i>
+                    </button>
+                    
+                    <button id="volume-btn" class="in-block">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+
+                    <button id="options-btn" class="in-block">Options</button>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container central flex">
+                <span>
+                    Made by Thang<br>
+                    25/04/2020
+                </span>
+
+                <a href="https://github.com/ducthang-vu/snake---game"><i class="fab fa-github-square"></i></a>
+            </div>
+        </footer>
+
+    </main>
+    
+
 
 
     <!-- AUDIO -->

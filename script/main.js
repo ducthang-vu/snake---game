@@ -12,16 +12,6 @@ const audio_success = document.getElementById('audio-success')
 const canvas = document.getElementById('canvas')
 const c = canvas.getContext('2d')
 
-const icon_switch = $('#icon-switch')
-const icon_volume = $('#icon-volume')
-const info_button = $('#info-button')
-const level_inputs = $('input[name="level"]')
-const play_btn = $('#play-button')
-const score_display = $('#score-display')
-const mes_display = $('#messages')
-const rules_box = $('#rules')
-const volume_button = $('#volume-button')
-
 
 /*************************************************/
 /********* --- CLASSES and FUNCTIONS --- *********/
@@ -30,7 +20,6 @@ const volume_button = $('#volume-button')
 class Coord {
     static createRandom() {return new Coord(Math.random() * canvas.width | 0, Math.random() * canvas.height | 0)}
 
-    // A class for essential  modelling of 2D vectors with basic methods for Snake game
     constructor(x, y) {
         if (x >= canvas.width) this.x = x - canvas.width
         else if (x < 0) this.x =  x + canvas.width 
@@ -114,11 +103,11 @@ class Game {
 
     constructor() {
         self = this
-        this.level = level_inputs.filter(':checked').attr('value')
+        this.level = $('input[name="level"]').filter(':checked').attr('value')
         this.snake = new Snake(Coord.createRandom())
         this.food = 0   //0: no food, 1: waiting to respawn, Coord(x,y): active at the coordinates
         this.score = 0
-        this.timerId
+        this.timerId = null
     }
 
     enabling_Keyboard() {
@@ -205,21 +194,29 @@ class Game {
             }
         } 
 
-        score_display.html(self.score)
+        $('#score-display').html(self.score)
     }
 
-    startCycles() {
-        self.addFood()
-
+    startInvervals() {
         this.timerId = setInterval(self.cycle, (() => {
             return this.level? Game.speed_per_score(self.score) : Game.speed_relax
         })())
     }
 
+    stopInvervals() {
+        clearInterval(self.timerId)
+        self.timerId = null
+    }
+
+    startCycles() {
+        self.addFood()
+        self.startInvervals()
+    }
+
     stopCycles() {
         self.food = 0
         audio_success.play()
-        clearInterval(self.timerId)
+        self.stopInvervals()
     }
 
     endgame() {
@@ -237,39 +234,95 @@ class Game {
 }
 
 
-function clearAll() {
-    try {game.stopCycles()} catch {}
-    score_display.html(0)
+function resetAll() {
+    var currentBest = null
+
+    try {
+        game.stopCycles()
+        if (game.score > currentBest) currentBest = game.score
+
+    } catch {}  //  if no game is active, do nothing
+
+    if (currentBest) $('#best-display').html(currentBest)
+
+    $('#score-display').html(0)
     c.clearRect(0, 0, canvas.width, canvas.height)
 }
 
 
-function showInfo() {
-    rules_box.toggle()
-    info_button.toggleClass('darkred-color')
-    info_button.children().toggleClass('fa-question-circle fa-window-close')
-} 
+function activatePauseBtn() {
+    try {
+        if (game.timerId) {
+            $('#pause-btn').html('Resume')
+            $('#pause-btn').addClass('resume')
+            game.stopInvervals()
+        } else {
+            $('#pause-btn').html('Pause')
+            $('#pause-btn').removeClass('resume')
+            game.startInvervals()
+        } 
+    } catch {}  //if no game is active, do nothing
+}
 
 
 function switchVolume() {
-    activeAudio = !activeAudio
-    icon_volume.toggleClass('fa-volume-up fa-volume-mute')
-    icon_switch.toggleClass('fa-toggle-on fa-toggle-off')
-    icon_switch.toggleClass('darkgreen-color darkred-color')
+    Array.from($('audio')).forEach(audio => audio.muted = !audio.muted)
+    
+    $('#volume-btn').children().toggleClass('fa-volume-up fa-volume-mute')
+}
+
+
+function activateMainMenu() {
+    activateMainMenu.isActiveSubMenu = 0    //0 = none, 1 = Info, 2 = Options    
+
+    function showInfoMenu() {
+        $('#main-menu').addClass('active')
+
+        activateMainMenu.isActiveSubMenu = 1
+        $('#options-menu').removeClass('active')
+        $('#info-menu').addClass('active')
+    }
+
+    function showOptionMenu() {
+        $('#main-menu').addClass('active')
+
+        activateMainMenu.isActiveSubMenu = 2
+        $('#info-menu').removeClass('active')
+        $('#options-menu').addClass('active')
+    }
+
+    function hideMainMenu() {
+        $('#main-menu').removeClass('active')
+
+        activateMainMenu.isActiveSubMenu = 0
+        $('#info-menu').removeClass('active')
+        $('#options-menu').removeClass('active')
+    }
+
+    function activateInfoBtn() {
+        activateMainMenu.isActiveSubMenu != 1 ? showInfoMenu() : hideMainMenu()
+    }
+
+    function activateOtionBtn() {
+        activateMainMenu.isActiveSubMenu != 2 ? showOptionMenu() : hideMainMenu()
+    }
+
+    $('#info-btn').click(activateInfoBtn)
+    $('#options-btn').click(activateOtionBtn)
+    $('#close-menu-btn').click(hideMainMenu)
 }
 
 
 /***************************************/
 /********* --- MAIN SCRITP --- *********/
 /***************************************/
-var activeAudio = true
+activateMainMenu()
+$('#pause-btn').click(activatePauseBtn)
+$('#volume-btn').click(switchVolume) 
 
 
-volume_button.click(switchVolume)
-info_button.click(showInfo)
-
-play_btn.click(()=> {
-        clearAll()
+$('#play-btn').click(()=> {
+        resetAll()
         game = new Game
         game.start()
     }
