@@ -104,7 +104,6 @@ main {
 
 /* HEADER */
 header {
-    padding: 15px 20px 10px;
     font-size: 200%;
     font-weight: 700;
     min-width: 320px;
@@ -113,13 +112,12 @@ header {
 
 /* PLAY-BUTTON SECTION */
 #play-btn { 
-    margin-bottom: 10px;
     padding: 5px 15px;
 }
 
 /* SCORE-ROW */
 .score-row > * {
-    margin: 5px 0;
+    margin-bottom: 5px;
 }
 
 .score-row > div:first-child {
@@ -170,6 +168,7 @@ header {
 
         .main-menu p {
             margin: 10px 0;
+            font-size: 80%;
         }
 
         #info-menu,
@@ -178,9 +177,10 @@ header {
             word-wrap: break-word;
         }
         
-            #options-menu h5 {
+            #options-menu .mode-box h5 {
                 margin-bottom: 10px;
             }
+
 
     .btn-row {
         justify-content: space-between;
