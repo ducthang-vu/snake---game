@@ -100,6 +100,7 @@ class Snake {
 class Game {
     static speed_per_score(score) {return Math.max(60 - (score * 0.50), 10)}
     static speed_relax = 60
+    static key_to_move = {w: 'up', d: 'right', a: 'left', s: 'down'}
 
     constructor() {
         self = this
@@ -111,25 +112,7 @@ class Game {
     }
 
     enabling_Keyboard() {
-        function keyMoving(e) {
-            switch (e.key) {
-                case 'w':
-                    self.snake.set_nextMove('up')
-                    break
-                case 'd':
-                    self.snake.set_nextMove('right')
-                    break
-                case 'a':
-                    self.snake.set_nextMove('left')
-                    break 
-                case 's':
-                    self.snake.set_nextMove('down')
-                    break
-            }
-        }
-
-        
-        $(document).keydown(keyMoving)
+        $(document).keydown(e => this.snake.set_nextMove(Game.key_to_move[e.key]))
     }
 
     enabling_mouse() {
@@ -227,9 +210,9 @@ class Game {
 
     start() {
         audio_bleep.play()
-        this.startCycles()
         this.enabling_Keyboard()
         this.enabling_mouse()
+        this.startCycles()
     }
 }
 
