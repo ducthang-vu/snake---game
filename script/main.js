@@ -104,7 +104,7 @@ class Game {
 
     constructor() {
         self = this
-        this.level = $('input[name="level"]').filter(':checked').attr('value')
+        this.level = parseInt($('input[name="level"]').filter(':checked').attr('value'))
         this.snake = new Snake(Coord.createRandom())
         this.food = 0   //0: no food, 1: waiting to respawn, Coord(x,y): active at the coordinates
         this.score = 0
@@ -112,7 +112,9 @@ class Game {
     }
 
     enabling_Keyboard() {
-        $(document).keydown(e => this.snake.set_nextMove(Game.key_to_move[e.key]))
+        $(document).keydown(e => {
+            if (Game.key_to_move[e.key]) this.snake.set_nextMove(Game.key_to_move[e.key])
+        })
     }
 
     enabling_mouse() {
@@ -173,7 +175,7 @@ class Game {
             if (snakeMoveResult == 1) {
                 self.score++
                 self.stopCycles() 
-                self.startCycles(this.timerId)
+                self.startCycles()
             }
         } 
 
@@ -182,7 +184,7 @@ class Game {
 
     startInvervals() {
         this.timerId = setInterval(self.cycle, (() => {
-            return this.level? Game.speed_per_score(self.score) : Game.speed_relax
+            return this.level ? Game.speed_per_score(this.score) : Game.speed_relax
         })())
     }
 
