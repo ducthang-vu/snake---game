@@ -205,7 +205,6 @@ class Game {
     endgame() {
         self.stopCycles() 
         audio_defeat.play()
-        mes_display.text('GAME OVER!')
     }
 
     start() {

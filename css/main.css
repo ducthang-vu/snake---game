@@ -168,7 +168,7 @@ header {
 
         .main-menu p {
             margin: 10px 0;
-            font-size: 80%;
+            font-size: 85%;
         }
 
         #info-menu,
@@ -177,10 +177,14 @@ header {
             word-wrap: break-word;
         }
         
-            #options-menu .mode-box h5 {
+            #options-menu .mode-box .title {
+                margin-top: 15px;
                 margin-bottom: 10px;
             }
 
+            #options-menu label {
+                margin-left: 35px;
+            } 
 
     .btn-row {
         justify-content: space-between;
