@@ -119,8 +119,8 @@ class Game {
 
     enabling_mouse() {
         function mouseMoving(e) {
-            var canvasRect = canvas.getBoundingClientRect()
-            var ratio = [canvasRect.width/canvas.width, canvasRect.height/canvas.height]
+            let canvasRect = canvas.getBoundingClientRect()
+            let ratio = [canvasRect.width/canvas.width, canvasRect.height/canvas.height]
 
             let x = e.clientX - canvasRect.left
             let y = e.clientY - canvasRect.top
