@@ -5,6 +5,14 @@ SNAKE is a fun and common video game, which does not require a lot of code. This
 
 ## Rules of the game
 
+The player controls a red headed snake, which roams around the board picking up green apples. By eating, the snake grow in length.
+
+Use 'w', 's', 'a', 'd', or touch inside the canvas to move the snake.
+
+It's GAME OVER if the snake run into its own tail.
+
+Hitting the border doesn't lose you the game: the snake will simply reappear on the other side!
+
 
 ## Usage
 
