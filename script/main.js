@@ -210,6 +210,7 @@ class Game {
     }
 
     start() {
+        this.level ? $('#mode-display').text('Normal') : $('#mode-display').text('Relax') 
         audio_bleep.play()
         this.enabling_Keyboard()
         this.enabling_mouse()
