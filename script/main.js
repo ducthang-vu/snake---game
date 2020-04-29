@@ -152,7 +152,7 @@ class Game {
                 var nextFood = Coord.createRandom()
             }  while (self.snake.isIncluded(nextFood)) 
         
-            self.food = self.food = nextFood
+            self.food = nextFood
         }
         
         self.food = 1
