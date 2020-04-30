@@ -293,8 +293,8 @@ function activateMainMenu(btnInfo, btnOptions, btnClose) {
     }
 
     btnInfo.click(activateInfoBtn)
-    btnOptions('#options-btn').click(activateOtionBtn)
-    btnClose('#close-menu-btn').click(hideMainMenu)
+    btnOptions.click(activateOtionBtn)
+    btnClose.click(hideMainMenu)
 }
 
 
