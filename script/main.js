@@ -238,12 +238,10 @@ function resetAll() {
 function activatePauseBtn() {
     try {
         if (game.timerId) {
-            $('#pause-btn').text('Resume')
-            $('#pause-btn').addClass('resume')
+            $('#pause-btn').addClass('resume').text('Resume')
             game.stopInvervals()
         } else {
-            $('#pause-btn').text('Pause')
-            $('#pause-btn').removeClass('resume')
+            $('#pause-btn').removeClass('resume').text('Pause')
             game.startInvervals()
         } 
     } catch {}  //if no game is active, do nothing
