@@ -1,10 +1,9 @@
 console.log('main.js is working')
 console.log($)
 
-
-/********************************************/
-/********* --- GLOBAL VARIABLES --- *********/
-/********************************************/
+/********************
+* GLOBAL VARIABLES  *
+********************/
 const audio_bleep =  document.getElementById('audio-bleep')
 const audio_defeat = document.getElementById('audio-defeat')
 const audio_success = document.getElementById('audio-success')
@@ -13,9 +12,9 @@ const canvas = document.getElementById('canvas')
 const c = canvas.getContext('2d')
 
 
-/*************************************************/
-/********* --- CLASSES and FUNCTIONS --- *********/
-/*************************************************/
+/************************
+* CLASSES and FUNCTIONS *
+************************/
 
 class Coord {
     static createRandom() {return new Coord(Math.random() * canvas.width | 0, Math.random() * canvas.height | 0)}
@@ -296,9 +295,9 @@ function activateMainMenu(btnInfo, btnOptions, btnClose) {
 }
 
 
-/***************************************/
-/********* --- MAIN SCRITP --- *********/
-/***************************************/
+/**************
+* MAIN SCRITP *
+**************/
 activateMainMenu($('#info-btn'), $('#options-btn'), $('#close-menu-btn'))
 $('#pause-btn').click(activatePauseBtn)
 $('#volume-btn').click(switchVolume) 
