@@ -257,7 +257,7 @@ function switchVolume() {
 }
 
 
-function activateMainMenu() {
+function activateMainMenu(btnInfo, btnOptions, btnClose) {
     activateMainMenu.isActiveSubMenu = 0    //0 = none, 1 = Info, 2 = Options    
 
     function showInfoMenu() {
@@ -292,16 +292,16 @@ function activateMainMenu() {
         activateMainMenu.isActiveSubMenu != 2 ? showOptionMenu() : hideMainMenu()
     }
 
-    $('#info-btn').click(activateInfoBtn)
-    $('#options-btn').click(activateOtionBtn)
-    $('#close-menu-btn').click(hideMainMenu)
+    btnInfo.click(activateInfoBtn)
+    btnOptions('#options-btn').click(activateOtionBtn)
+    btnClose('#close-menu-btn').click(hideMainMenu)
 }
 
 
 /***************************************/
 /********* --- MAIN SCRITP --- *********/
 /***************************************/
-activateMainMenu()
+activateMainMenu($('#info-btn'), $('#options-btn'), $('#close-menu-btn'))
 $('#pause-btn').click(activatePauseBtn)
 $('#volume-btn').click(switchVolume) 
 
