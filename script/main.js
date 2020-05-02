@@ -124,7 +124,7 @@ class Game {
             let x = e.clientX - canvasRect.left
             let y = e.clientY - canvasRect.top
             
-            var clickCoord = new Coord(x/ratio[0], y/ratio[1])
+            let clickCoord = new Coord(x/ratio[0], y/ratio[1])
 
             //checking whether the snake is moving horizontally...
             if (self.snake.head.y == self.snake.tail[0].y) {
