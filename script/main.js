@@ -148,7 +148,7 @@ class Game {
     addFood() {
         function createFood() {
             do {
-                var nextFood = Coord.createRandom()
+                let nextFood = Coord.createRandom()
             }  while (self.snake.isIncluded(nextFood)) 
         
             self.food = nextFood
@@ -164,7 +164,7 @@ class Game {
     }
 
     cycle() {
-        var snakeMoveResult = self.snake.moveSnake(self.food) 
+        let snakeMoveResult = self.snake.moveSnake(self.food) 
         if (snakeMoveResult == -1) self.endgame()   // player loses
         else {
             c.clearRect(0, 0, canvas.width, canvas.height)
