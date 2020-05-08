@@ -148,7 +148,7 @@ class Game {
     addFood() {
         function createFood() {
             do {
-                let nextFood = Coord.createRandom()
+                var nextFood = Coord.createRandom()
             }  while (self.snake.isIncluded(nextFood)) 
         
             self.food = nextFood
