@@ -2,6 +2,7 @@
 
 SNAKE is a fun and common video game, which does not require a lot of code. This is an implementation  of the game.
 
+Try it [here](https://ducthang-vu.github.io/snake---game/).
 
 ## Rules of the game
 
