@@ -219,11 +219,9 @@ class Game {
 
 
 function resetAll() {
-    resetAll.currentBest = null
-    
     try {
         game.stopCycles()
-        if (game.score > resetAll.currentBest) resetAll.currentBest = game.score
+        if (game.score > (resetAll.currentBest || 0)) resetAll.currentBest = game.score
 
     } catch {}  //  if no game is active, do nothing
 
