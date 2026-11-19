@@ -99,6 +99,7 @@ class Snake {
 class Game {
     static speed_per_score(score) {return Math.max(60 - (score * 0.50), 10)}
     static speed_relax = 60
+    static food_delay = 1000   // ms between eating and the next apple appearing
     static key_to_move = {w: 'up', d: 'right', a: 'left', s: 'down'}
 
     constructor() {
@@ -108,6 +109,7 @@ class Game {
         this.food = 0   //0: no food, 1: waiting to respawn, Coord(x,y): active at the coordinates
         this.score = 0
         this.timerId = null
+        this.foodTimerId = null
     }
 
     enabling_Keyboard() {
@@ -146,16 +148,23 @@ class Game {
     }
 
     addFood() {
+        self.food = 1
+        self.foodWaitLeft = Game.food_delay
+        self.scheduleFood()
+    }
+
+    scheduleFood() {
         function createFood() {
             do {
                 var nextFood = Coord.createRandom()
-            }  while (self.snake.isIncluded(nextFood)) 
-        
+            }  while (self.snake.isIncluded(nextFood))
+
             self.food = nextFood
+            self.foodTimerId = null
         }
-        
-        self.food = 1
-        setTimeout(createFood, 1000)
+
+        self.foodDueAt = Date.now() + self.foodWaitLeft
+        self.foodTimerId = setTimeout(createFood, self.foodWaitLeft)
     }
 
     printFood() {
@@ -185,11 +194,17 @@ class Game {
         this.timerId = setInterval(self.cycle, (() => {
             return this.level ? Game.speed_per_score(this.score) : Game.speed_relax
         })())
+        if (this.food === 1 && this.foodTimerId === null) this.scheduleFood()  // resume a pending respawn
     }
 
     stopInvervals() {
         clearInterval(self.timerId)
         self.timerId = null
+        if (self.foodTimerId !== null) {   // keep the time still left on the respawn for resume
+            self.foodWaitLeft = Math.max(0, self.foodDueAt - Date.now())
+            clearTimeout(self.foodTimerId)
+            self.foodTimerId = null
+        }
     }
 
     startCycles() {
