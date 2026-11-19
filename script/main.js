@@ -197,11 +197,13 @@ class Game {
 
     endgame() {
         self.over = true
+        $("#pause-btn").css("visibility", "hidden")  // a finished game has nothing to pause
         self.stopCycles() 
         audio_defeat.play()
     }
 
     start() {
+        $("#pause-btn").css("visibility", "visible")
         this.level ? $('#mode-display').text('Normal') : $('#mode-display').text('Relax') 
         audio_bleep.play()
         this.enabling_Keyboard()
