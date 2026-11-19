@@ -109,6 +109,7 @@ class Game {
         this.food = 0   //0: no food, 1: waiting to respawn, Coord(x,y): active at the coordinates
         this.score = 0
         this.timerId = null
+        this.over = false   // set when the snake dies: a finished game must not be resumed
         this.foodTimerId = null
     }
 
@@ -195,11 +196,14 @@ class Game {
     }
 
     endgame() {
+        self.over = true
+        $("#pause-btn").css("visibility", "hidden")  // a finished game has nothing to pause
         self.stopCycles() 
         audio_defeat.play()
     }
 
     start() {
+        $("#pause-btn").css("visibility", "visible")
         this.level ? $('#mode-display').text('Normal') : $('#mode-display').text('Relax') 
         audio_bleep.play()
         this.enabling_Keyboard()
@@ -251,6 +255,7 @@ function resetAll() {
 
 function activatePauseBtn() {
     try {
+        if (game.over) return
         if (game.timerId) {
             $('#pause-btn').addClass('resume').text('Resume')
             game.stopInvervals()
