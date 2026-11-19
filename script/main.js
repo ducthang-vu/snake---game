@@ -11,6 +11,9 @@ const audio_success = document.getElementById('audio-success')
 const canvas = document.getElementById('canvas')
 const c = canvas.getContext('2d')
 
+let game = null          // the current Game, or null before the first Play
+let mouseListener = null // the click handler currently on the canvas
+
 
 /************************
 * CLASSES and FUNCTIONS *
@@ -103,7 +106,6 @@ class Game {
     static key_to_move = {w: 'up', d: 'right', a: 'left', s: 'down'}
 
     constructor() {
-        self = this
         this.level = parseInt($('input[name="level"]').filter(':checked').attr('value'))
         this.snake = new Snake(Coord.createRandom())
         this.food = 0   //0: no food, 1: waiting to respawn, Coord(x,y): active at the coordinates
@@ -120,28 +122,53 @@ class Game {
     }
 
     enabling_mouse() {
-        canvas.removeEventListener("click", mouseMoving)  // one listener, so restarts do not stack
-        canvas.addEventListener("click", mouseMoving)
+        if (mouseListener) canvas.removeEventListener("click", mouseListener)  // one listener, so restarts do not stack
+        mouseListener = e => this.moveFromClick(e)
+        canvas.addEventListener("click", mouseListener)
+    }
+
+    moveFromClick(e) {
+        let canvasRect = canvas.getBoundingClientRect()
+        let ratio = [canvasRect.width/canvas.width, canvasRect.height/canvas.height]
+
+        let x = e.clientX - canvasRect.left
+        let y = e.clientY - canvasRect.top
+
+        let clickCoord = new Coord(x/ratio[0], y/ratio[1])
+
+        //checking whether the snake is moving horizontally...
+        if (this.snake.head.y == this.snake.tail[0].y) {
+            if (clickCoord.y < this.snake.tail[0].y) {
+                this.snake.set_nextMove("up")
+            } else if (clickCoord.y > this.snake.tail[0].y + 1) {
+                this.snake.set_nextMove("down")
+            }
+        } // or vertically
+        else if (clickCoord.x < this.snake.tail[0].x) {
+            this.snake.set_nextMove("left")
+        } else if (clickCoord.x > this.snake.tail[0].x + 1) {
+            this.snake.set_nextMove("right")
+        }
     }
 
     addFood() {
-        self.food = 1
-        self.foodWaitLeft = Game.food_delay
-        self.scheduleFood()
+        this.food = 1
+        this.foodWaitLeft = Game.food_delay
+        this.scheduleFood()
     }
 
     scheduleFood() {
-        function createFood() {
+        const createFood = () => {
             do {
                 var nextFood = Coord.createRandom()
-            }  while (self.snake.isIncluded(nextFood))
+            }  while (this.snake.isIncluded(nextFood))
 
-            self.food = nextFood
-            self.foodTimerId = null
+            this.food = nextFood
+            this.foodTimerId = null
         }
 
-        self.foodDueAt = Date.now() + self.foodWaitLeft
-        self.foodTimerId = setTimeout(createFood, self.foodWaitLeft)
+        this.foodDueAt = Date.now() + this.foodWaitLeft
+        this.foodTimerId = setTimeout(createFood, this.foodWaitLeft)
     }
 
     printFood() {
@@ -150,55 +177,55 @@ class Game {
     }
 
     cycle() {
-        let snakeMoveResult = self.snake.moveSnake(self.food) 
-        if (snakeMoveResult == -1) self.endgame()   // player loses
+        let snakeMoveResult = this.snake.moveSnake(this.food) 
+        if (snakeMoveResult == -1) this.endgame()   // player loses
         else {
             c.clearRect(0, 0, canvas.width, canvas.height)
-            self.snake.printSnake()
-            self.printFood()
+            this.snake.printSnake()
+            this.printFood()
 
             if (snakeMoveResult == 1) {
-                self.score++
+                this.score++
                 audio_success.play()   // only eating an apple is a success
-                self.stopCycles() 
-                self.startCycles()
+                this.stopCycles() 
+                this.startCycles()
             }
         } 
 
-        $('#score-display').text(self.score)
+        $('#score-display').text(this.score)
     }
 
     startInvervals() {
-        this.timerId = setInterval(self.cycle, (() => {
+        this.timerId = setInterval(() => this.cycle(), (() => {
             return this.level ? Game.speed_per_score(this.score) : Game.speed_relax
         })())
         if (this.food === 1 && this.foodTimerId === null) this.scheduleFood()  // resume a pending respawn
     }
 
     stopInvervals() {
-        clearInterval(self.timerId)
-        self.timerId = null
-        if (self.foodTimerId !== null) {   // keep the time still left on the respawn for resume
-            self.foodWaitLeft = Math.max(0, self.foodDueAt - Date.now())
-            clearTimeout(self.foodTimerId)
-            self.foodTimerId = null
+        clearInterval(this.timerId)
+        this.timerId = null
+        if (this.foodTimerId !== null) {   // keep the time still left on the respawn for resume
+            this.foodWaitLeft = Math.max(0, this.foodDueAt - Date.now())
+            clearTimeout(this.foodTimerId)
+            this.foodTimerId = null
         }
     }
 
     startCycles() {
-        self.addFood()
-        self.startInvervals()
+        this.addFood()
+        this.startInvervals()
     }
 
     stopCycles() {
-        self.food = 0
-        self.stopInvervals()
+        this.food = 0
+        this.stopInvervals()
     }
 
     endgame() {
-        self.over = true
+        this.over = true
         $("#pause-btn").css("visibility", "hidden")  // a finished game has nothing to pause
-        self.stopCycles() 
+        this.stopCycles() 
         audio_defeat.play()
     }
 
@@ -209,32 +236,6 @@ class Game {
         this.enabling_Keyboard()
         this.enabling_mouse()
         this.startCycles()
-    }
-}
-
-
-// Click handler for moving the snake. It is one shared function so it can be removed before re-adding.
-function mouseMoving(e) {
-    let canvasRect = canvas.getBoundingClientRect()
-    let ratio = [canvasRect.width/canvas.width, canvasRect.height/canvas.height]
-
-    let x = e.clientX - canvasRect.left
-    let y = e.clientY - canvasRect.top
-
-    let clickCoord = new Coord(x/ratio[0], y/ratio[1])
-
-    //checking whether the snake is moving horizontally...
-    if (self.snake.head.y == self.snake.tail[0].y) {
-        if (clickCoord.y < self.snake.tail[0].y) {
-            self.snake.set_nextMove("up")
-        } else if (clickCoord.y > self.snake.tail[0].y + 1) {
-            self.snake.set_nextMove("down")
-        }
-    } // or vertically
-    else if (clickCoord.x < self.snake.tail[0].x) {
-        self.snake.set_nextMove("left")
-    } else if (clickCoord.x > self.snake.tail[0].x + 1) {
-        self.snake.set_nextMove("right")
     }
 }
 
