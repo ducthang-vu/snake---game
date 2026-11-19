@@ -99,6 +99,7 @@ class Snake {
 class Game {
     static speed_per_score(score) {return Math.max(60 - (score * 0.50), 10)}
     static speed_relax = 60
+    static food_delay = 1000   // ms between eating and the next apple appearing
     static key_to_move = {w: 'up', d: 'right', a: 'left', s: 'down'}
 
     constructor() {
@@ -148,6 +149,7 @@ class Game {
 
     addFood() {
         self.food = 1
+        self.foodRemaining = Game.food_delay
         self.scheduleFood()
     }
 
@@ -161,7 +163,8 @@ class Game {
             self.foodTimerId = null
         }
 
-        self.foodTimerId = setTimeout(createFood, 1000)
+        self.foodDueAt = Date.now() + self.foodRemaining
+        self.foodTimerId = setTimeout(createFood, self.foodRemaining)
     }
 
     printFood() {
@@ -197,8 +200,11 @@ class Game {
     stopInvervals() {
         clearInterval(self.timerId)
         self.timerId = null
-        clearTimeout(self.foodTimerId)  // a pending respawn must not outlive the pause or the game
-        self.foodTimerId = null
+        if (self.foodTimerId !== null) {   // keep the time still left on the respawn for resume
+            self.foodRemaining = Math.max(0, self.foodDueAt - Date.now())
+            clearTimeout(self.foodTimerId)
+            self.foodTimerId = null
+        }
     }
 
     startCycles() {
