@@ -113,38 +113,14 @@ class Game {
     }
 
     enabling_Keyboard() {
-        $(document).keydown(e => {
+        $(document).off("keydown.snake").on("keydown.snake", e => {
             if (Game.key_to_move[e.key]) this.snake.set_nextMove(Game.key_to_move[e.key])
         })
     }
 
     enabling_mouse() {
-        function mouseMoving(e) {
-            let canvasRect = canvas.getBoundingClientRect()
-            let ratio = [canvasRect.width/canvas.width, canvasRect.height/canvas.height]
-
-            let x = e.clientX - canvasRect.left
-            let y = e.clientY - canvasRect.top
-            
-            let clickCoord = new Coord(x/ratio[0], y/ratio[1])
-
-            //checking whether the snake is moving horizontally...
-            if (self.snake.head.y == self.snake.tail[0].y) {
-                if (clickCoord.y < self.snake.tail[0].y) {
-                    self.snake.set_nextMove('up')
-                } else if (clickCoord.y > self.snake.tail[0].y + 1) {
-                    self.snake.set_nextMove('down')
-                    }
-            } // or vertically
-            else if (clickCoord.x < self.snake.tail[0].x) {
-                    self.snake.set_nextMove('left')
-                } else if (clickCoord.x > self.snake.tail[0].x + 1) {
-                    self.snake.set_nextMove('right')
-                } 
-        }
-
-
-        canvas.addEventListener('click', mouseMoving)
+        canvas.removeEventListener("click", mouseMoving)  // one listener, so restarts do not stack
+        canvas.addEventListener("click", mouseMoving)
     }
 
     addFood() {
@@ -229,6 +205,32 @@ class Game {
         this.enabling_Keyboard()
         this.enabling_mouse()
         this.startCycles()
+    }
+}
+
+
+// Click handler for moving the snake. It is one shared function so it can be removed before re-adding.
+function mouseMoving(e) {
+    let canvasRect = canvas.getBoundingClientRect()
+    let ratio = [canvasRect.width/canvas.width, canvasRect.height/canvas.height]
+
+    let x = e.clientX - canvasRect.left
+    let y = e.clientY - canvasRect.top
+
+    let clickCoord = new Coord(x/ratio[0], y/ratio[1])
+
+    //checking whether the snake is moving horizontally...
+    if (self.snake.head.y == self.snake.tail[0].y) {
+        if (clickCoord.y < self.snake.tail[0].y) {
+            self.snake.set_nextMove("up")
+        } else if (clickCoord.y > self.snake.tail[0].y + 1) {
+            self.snake.set_nextMove("down")
+        }
+    } // or vertically
+    else if (clickCoord.x < self.snake.tail[0].x) {
+        self.snake.set_nextMove("left")
+    } else if (clickCoord.x > self.snake.tail[0].x + 1) {
+        self.snake.set_nextMove("right")
     }
 }
 
