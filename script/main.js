@@ -108,6 +108,7 @@ class Game {
         this.food = 0   //0: no food, 1: waiting to respawn, Coord(x,y): active at the coordinates
         this.score = 0
         this.timerId = null
+        this.foodTimerId = null
     }
 
     enabling_Keyboard() {
@@ -146,16 +147,21 @@ class Game {
     }
 
     addFood() {
+        self.food = 1
+        self.scheduleFood()
+    }
+
+    scheduleFood() {
         function createFood() {
             do {
                 var nextFood = Coord.createRandom()
-            }  while (self.snake.isIncluded(nextFood)) 
-        
+            }  while (self.snake.isIncluded(nextFood))
+
             self.food = nextFood
+            self.foodTimerId = null
         }
-        
-        self.food = 1
-        setTimeout(createFood, 1000)
+
+        self.foodTimerId = setTimeout(createFood, 1000)
     }
 
     printFood() {
@@ -185,11 +191,14 @@ class Game {
         this.timerId = setInterval(self.cycle, (() => {
             return this.level ? Game.speed_per_score(this.score) : Game.speed_relax
         })())
+        if (this.food === 1 && this.foodTimerId === null) this.scheduleFood()  // resume a pending respawn
     }
 
     stopInvervals() {
         clearInterval(self.timerId)
         self.timerId = null
+        clearTimeout(self.foodTimerId)  // a pending respawn must not outlive the pause or the game
+        self.foodTimerId = null
     }
 
     startCycles() {
