@@ -149,7 +149,7 @@ class Game {
 
     addFood() {
         self.food = 1
-        self.foodRemaining = Game.food_delay
+        self.foodWaitLeft = Game.food_delay
         self.scheduleFood()
     }
 
@@ -163,8 +163,8 @@ class Game {
             self.foodTimerId = null
         }
 
-        self.foodDueAt = Date.now() + self.foodRemaining
-        self.foodTimerId = setTimeout(createFood, self.foodRemaining)
+        self.foodDueAt = Date.now() + self.foodWaitLeft
+        self.foodTimerId = setTimeout(createFood, self.foodWaitLeft)
     }
 
     printFood() {
@@ -201,7 +201,7 @@ class Game {
         clearInterval(self.timerId)
         self.timerId = null
         if (self.foodTimerId !== null) {   // keep the time still left on the respawn for resume
-            self.foodRemaining = Math.max(0, self.foodDueAt - Date.now())
+            self.foodWaitLeft = Math.max(0, self.foodDueAt - Date.now())
             clearTimeout(self.foodTimerId)
             self.foodTimerId = null
         }
