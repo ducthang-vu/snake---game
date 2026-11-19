@@ -159,6 +159,7 @@ class Game {
 
             if (snakeMoveResult == 1) {
                 self.score++
+                audio_success.play()   // only eating an apple is a success
                 self.stopCycles() 
                 self.startCycles()
             }
@@ -191,7 +192,6 @@ class Game {
 
     stopCycles() {
         self.food = 0
-        audio_success.play()
         self.stopInvervals()
     }
 
